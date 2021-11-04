@@ -42,10 +42,14 @@ namespace Microsoft.Health.Fhir.Ingest.Service
         protected async override Task<IDictionary<ResourceType, string>> ResolveResourceIdentitiesInternalAsync(IMeasurementGroup input)
         {
             var system = ResourceIdentityOptions?.DefaultDeviceIdentifierSystem;
-            var (deviceId, patientId) = await LookUpDeviceAndPatientIdAsync(GetDeviceIdentity(input), system).ConfigureAwait(false);
+
+            // var (deviceId, patientId) = await LookUpDeviceAndPatientIdAsync(GetDeviceIdentity(input), system).ConfigureAwait(false);
+            var (deviceId, patientId) = await LookUpDeviceIdAndPatientIdAsync(GetDeviceIdentity(input), GetPatientIdentity(input), system).ConfigureAwait(false);
             return CreateIdentityLookup(deviceId, patientId);
         }
 
-        protected abstract Task<(string DeviceId, string PatientId)> LookUpDeviceAndPatientIdAsync(string value, string system = null);
+        // protected abstract Task<(string DeviceId, string PatientId)> LookUpDeviceAndPatientIdAsync(string value, string system = null);
+
+        protected abstract Task<(string DeviceId, string PatientId)> LookUpDeviceIdAndPatientIdAsync(string deviceId, string patientId, string system = null);
     }
 }

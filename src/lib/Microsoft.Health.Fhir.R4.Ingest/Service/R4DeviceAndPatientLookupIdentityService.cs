@@ -44,10 +44,17 @@ namespace Microsoft.Health.Fhir.Ingest.Service
             return device.Patient?.GetId<Model.Patient>() ?? throw new FhirResourceNotFoundException(ResourceType.Patient);
         }
 
-        protected async override Task<(string DeviceId, string PatientId)> LookUpDeviceAndPatientIdAsync(string value, string system = null)
+        // protected async override Task<(string DeviceId, string PatientId)> LookUpDeviceAndPatientIdAsync(string value, string system = null)
+        // {
+        //    var device = await ResourceManagementService.GetResourceByIdentityAsync<Model.Device>(FhirClient, value, system).ConfigureAwait(false) ?? throw new FhirResourceNotFoundException(ResourceType.Device);
+        //    return (device.Id, GetPatientIdFromDevice(device));
+        // }
+
+        protected async override Task<(string DeviceId, string PatientId)> LookUpDeviceIdAndPatientIdAsync(string deviceId, string patientId, string system = null)
         {
-            var device = await ResourceManagementService.GetResourceByIdentityAsync<Model.Device>(FhirClient, value, system).ConfigureAwait(false) ?? throw new FhirResourceNotFoundException(ResourceType.Device);
-            return (device.Id, GetPatientIdFromDevice(device));
+            var device = await ResourceManagementService.GetResourceByIdentityAsync<Model.Device>(FhirClient, deviceId, system).ConfigureAwait(false) ?? throw new FhirResourceNotFoundException(ResourceType.Device);
+            var patient = await ResourceManagementService.GetResourceByIdentityAsync<Model.Patient>(FhirClient, patientId, system).ConfigureAwait(false) ?? throw new FhirResourceNotFoundException(ResourceType.Patient);
+            return (device.Id, patient.Id);
         }
     }
 }
