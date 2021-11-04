@@ -19,6 +19,13 @@ namespace Microsoft.Health.Fhir.Ingest.Service
             return input.DeviceId;
         }
 
+        protected static string GetPatientIdentity(IMeasurementGroup input)
+        {
+            EnsureArg.IsNotNull(input, nameof(input));
+
+            return input.PatientId;
+        }
+
         protected static IDictionary<ResourceType, string> CreateIdentityLookup(string deviceId, string patientId)
         {
             var lookup = IdentityLookupFactory.Instance.Create();
